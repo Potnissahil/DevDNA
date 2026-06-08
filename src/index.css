@@ -1,0 +1,124 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --surface: #f6f7fb;
+    --surface-rgb: 246 247 251;
+    --sidebar: #eef2ff;
+    --panel: rgba(255, 255, 255, 0.82);
+    --panel-muted: rgba(216, 224, 240, 0.72);
+    --border: rgba(148, 163, 184, 0.24);
+    --border-strong: rgba(148, 163, 184, 0.42);
+    --text-primary: #10203a;
+    --text-secondary: #526076;
+    --accent: #0a66c2;
+    --accent-strong: #0655a4;
+    --accent-2: #14b8a6;
+    --accent-soft: rgba(10, 102, 194, 0.12);
+    --surface-gradient-mix: #d9e4ff;
+    --tone-success-bg: rgba(16, 185, 129, 0.12);
+    --tone-success-text: #047857;
+    --tone-warning-bg: rgba(245, 158, 11, 0.12);
+    --tone-warning-text: #b45309;
+    --tone-error-text: #be123c;
+    color: var(--text-primary);
+    background-color: var(--surface);
+    font-family: "Instrument Sans", "Segoe UI", sans-serif;
+  }
+
+  :root[data-theme="dark"] {
+    --surface: #09111f;
+    --surface-rgb: 9 17 31;
+    --sidebar: #08101e;
+    --panel: rgba(11, 23, 41, 0.82);
+    --panel-muted: rgba(20, 33, 55, 0.9);
+    --border: rgba(71, 85, 105, 0.45);
+    --border-strong: rgba(100, 116, 139, 0.55);
+    --text-primary: #edf2ff;
+    --text-secondary: #94a3b8;
+    --accent: #5ea8ff;
+    --accent-strong: #7cb7ff;
+    --accent-2: #2dd4bf;
+    --accent-soft: rgba(94, 168, 255, 0.12);
+    --surface-gradient-mix: #0f1a2e;
+    --tone-success-bg: rgba(16, 185, 129, 0.12);
+    --tone-success-text: #6ee7b7;
+    --tone-warning-bg: rgba(245, 158, 11, 0.12);
+    --tone-warning-text: #fcd34d;
+    --tone-error-text: #fb7185;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top left, rgba(94, 168, 255, 0.18), transparent 30%),
+      radial-gradient(circle at top right, rgba(45, 212, 191, 0.14), transparent 28%),
+      linear-gradient(
+        180deg,
+        var(--surface) 0%,
+        color-mix(in srgb, var(--surface) 88%, var(--surface-gradient-mix) 12%) 100%
+      );
+    color: var(--text-primary);
+    transition:
+      background-color 240ms ease,
+      color 240ms ease;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Sora", "Instrument Sans", sans-serif;
+    letter-spacing: -0.03em;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-[32px] border shadow-panel backdrop-blur;
+    background: var(--panel);
+    border-color: var(--border);
+  }
+
+  .field {
+    @apply w-full rounded-2xl border px-4 py-3 outline-none transition;
+    border-color: var(--border-strong);
+    background: color-mix(in srgb, var(--panel) 82%, transparent);
+    color: var(--text-primary);
+  }
+
+  .field::placeholder {
+    color: var(--text-secondary);
+  }
+
+  .field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+}
