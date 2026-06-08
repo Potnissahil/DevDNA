@@ -5,6 +5,7 @@ import useCollection from "../hooks/useCollection";
 import useGitHubData from "../hooks/useGitHubData";
 import { useAuth } from "../contexts/AuthContext";
 import { calculateAverageProgress } from "../utils/formatters";
+import { normalizeGitHubUsername } from "../utils/githubUsername";
 
 function AnalyticsPage() {
   const { profile } = useAuth();
@@ -17,26 +18,33 @@ function AnalyticsPage() {
   const completedGoals = goals.items.filter((goal) => goal.status === "Completed").length;
   const deliveryHealth = projects.items.filter((project) => project.health === "Green").length;
 
+  const activeDays = github.stats?.activeDays ?? 0;
+  const hasGitHubUsername = Boolean(normalizeGitHubUsername(profile?.github_username));
+
   const trendRows = [
     {
       label: "Skill maturity",
       value: averageProgress,
-      detail: "Average progress across all tracked skills"
+      detail: "Average progress across all tracked skills",
+      format: "percent"
     },
     {
       label: "Goal completion",
       value: goals.items.length ? Math.round((completedGoals / goals.items.length) * 100) : 0,
-      detail: "Share of learning goals marked completed"
+      detail: "Share of learning goals marked completed",
+      format: "percent"
     },
     {
       label: "Project health",
       value: projects.items.length ? Math.round((deliveryHealth / projects.items.length) * 100) : 0,
-      detail: "Share of tracked projects currently healthy"
+      detail: "Share of tracked projects currently healthy",
+      format: "percent"
     },
     {
-      label: "GitHub activity days",
-      value: github.stats?.activeDays || 0,
-      detail: "Recent days with public push events"
+      label: "GitHub active days",
+      value: activeDays,
+      detail: "Unique days with public push events from recent GitHub activity",
+      format: "activeDays"
     }
   ];
 
@@ -59,8 +67,18 @@ function AnalyticsPage() {
         <MetricCard label="Healthy projects" value={deliveryHealth} trend="Delivery" />
         <MetricCard
           label="Public activity events"
-          value={github.stats?.recentEvents ?? 0}
-          trend="GitHub"
+          value={
+            github.error
+              ? "Unavailable"
+              : !hasGitHubUsername
+                ? "Not connected"
+                : github.loading
+                  ? "Loading..."
+                  : (github.stats?.recentEvents ?? 0)
+          }
+          trend={github.error ? "Error" : "GitHub"}
+          tone={github.error ? "warning" : "default"}
+          hint={github.error || undefined}
         />
       </div>
 
@@ -69,26 +87,48 @@ function AnalyticsPage() {
           <SectionHeader
             eyebrow="Trend Radar"
             title="Progress index"
-            description="Each bar visualizes an important operating metric on a 0-100 scale."
+            description="Skill, goal, and project bars use a 0-100% scale. GitHub active days are shown as a day count."
           />
           <div className="mt-6 space-y-5">
-            {trendRows.map((row) => (
-              <div key={row.label}>
-                <div className="flex items-center justify-between gap-4 text-sm">
-                  <div>
-                    <p className="font-semibold text-[var(--text-primary)]">{row.label}</p>
-                    <p className="text-[var(--text-secondary)]">{row.detail}</p>
+            {trendRows.map((row) => {
+              const isGitHubRow = row.format === "activeDays";
+              let displayValue = `${row.value}%`;
+              let barWidth = Math.min(row.value, 100);
+              let detail = row.detail;
+
+              if (isGitHubRow) {
+                if (github.error && hasGitHubUsername) {
+                  displayValue = "Unavailable";
+                  barWidth = 0;
+                  detail = github.error;
+                } else if (!hasGitHubUsername) {
+                  displayValue = "Not connected";
+                  barWidth = 0;
+                  detail = "Add your GitHub username in Profile to load activity days.";
+                } else {
+                  displayValue = `${row.value} active day${row.value === 1 ? "" : "s"}`;
+                  barWidth = Math.min((row.value / 30) * 100, 100);
+                }
+              }
+
+              return (
+                <div key={row.label}>
+                  <div className="flex items-center justify-between gap-4 text-sm">
+                    <div>
+                      <p className="font-semibold text-[var(--text-primary)]">{row.label}</p>
+                      <p className="text-[var(--text-secondary)]">{detail}</p>
+                    </div>
+                    <span className="font-semibold text-[var(--accent)]">{displayValue}</span>
                   </div>
-                  <span className="font-semibold text-[var(--accent)]">{row.value}%</span>
+                  <div className="mt-3 h-3 rounded-full bg-[var(--panel-muted)]">
+                    <div
+                      className="h-3 rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
+                      style={{ width: `${barWidth}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="mt-3 h-3 rounded-full bg-[var(--panel-muted)]">
-                  <div
-                    className="h-3 rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
-                    style={{ width: `${Math.min(row.value, 100)}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
 

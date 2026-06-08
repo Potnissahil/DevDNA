@@ -7,6 +7,7 @@ import useCollection from "../hooks/useCollection";
 import useGitHubData from "../hooks/useGitHubData";
 import { useAuth } from "../contexts/AuthContext";
 import { calculateAverageProgress, formatDate, initialsFromName } from "../utils/formatters";
+import { normalizeGitHubUsername } from "../utils/githubUsername";
 
 function OverviewPage() {
   const { profile } = useAuth();
@@ -18,6 +19,7 @@ function OverviewPage() {
   const loading = skills.loading || goals.loading || projects.loading;
   const activeGoals = goals.items.filter((goal) => goal.status !== "Completed").length;
   const progressAverage = calculateAverageProgress(skills.items);
+  const hasGitHubUsername = Boolean(normalizeGitHubUsername(profile?.github_username));
 
   return (
     <div className="space-y-6">
@@ -105,9 +107,27 @@ function OverviewPage() {
           />
           <MetricCard
             label="GitHub repos"
-            value={github.stats?.repoCount ?? 0}
-            trend={`${github.stats?.recentEvents ?? 0} events`}
-            hint="Repository footprint and recent public activity from GitHub."
+            value={
+              github.error
+                ? "Unavailable"
+                : !hasGitHubUsername
+                  ? "Not connected"
+                  : github.loading
+                    ? "Loading..."
+                    : (github.stats?.repoCount ?? 0)
+            }
+            trend={
+              github.error
+                ? "Error"
+                : !hasGitHubUsername || github.loading
+                  ? "GitHub"
+                  : `${github.stats?.recentEvents ?? 0} events`
+            }
+            tone={github.error ? "warning" : "default"}
+            hint={
+              github.error ||
+              "Repository footprint and recent public activity from GitHub."
+            }
           />
         </div>
       )}
@@ -157,6 +177,16 @@ function OverviewPage() {
           <div className="mt-6 space-y-4">
             {github.loading ? (
               <SkeletonCard />
+            ) : github.error ? (
+              <EmptyState
+                title="GitHub data unavailable"
+                description={github.error}
+              />
+            ) : !hasGitHubUsername ? (
+              <EmptyState
+                title="Connect a GitHub username"
+                description="Add your GitHub username in the Profile page to unlock repository analytics."
+              />
             ) : github.languageBreakdown.length ? (
               github.languageBreakdown.slice(0, 5).map((language) => {
                 const max = github.languageBreakdown[0].count || 1;
@@ -179,8 +209,8 @@ function OverviewPage() {
               })
             ) : (
               <EmptyState
-                title="Connect a GitHub username"
-                description="Add your GitHub username in the Profile page to unlock repository analytics."
+                title="No language data yet"
+                description="This GitHub account has no public repositories with a primary language to display."
               />
             )}
           </div>

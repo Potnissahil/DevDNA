@@ -4,6 +4,7 @@ import Card from "../components/common/Card";
 import SectionHeader from "../components/common/SectionHeader";
 import { useAuth } from "../contexts/AuthContext";
 import { useToasts } from "../contexts/ToastContext";
+import { validateGitHubUsername } from "../utils/githubUsername";
 
 function SettingsPage() {
   const { profile, updateProfile, authMode } = useAuth();
@@ -22,9 +23,22 @@ function SettingsPage() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+
+    const githubValidation = validateGitHubUsername(form.github_username);
+    if (!githubValidation.valid) {
+      pushToast({
+        title: "Invalid GitHub username",
+        description: githubValidation.error
+      });
+      return;
+    }
+
     setSaving(true);
     try {
-      await updateProfile(form);
+      await updateProfile({
+        ...form,
+        github_username: githubValidation.username
+      });
       pushToast({
         title: "Profile updated",
         description: "Your identity and GitHub settings were saved."
@@ -73,7 +87,12 @@ function SettingsPage() {
                 className="field"
                 value={form.github_username}
                 onChange={(event) => updateField("github_username", event.target.value)}
+                placeholder="e.g. octocat"
+                autoComplete="username"
               />
+              <span className="mt-2 block text-xs leading-5 text-[var(--text-secondary)]">
+                Letters, numbers, and hyphens only. Leave blank to disconnect GitHub analytics.
+              </span>
             </label>
             <label className="block">
               <span className="mb-2 block text-sm font-medium">Bio</span>

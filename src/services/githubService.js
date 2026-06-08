@@ -1,4 +1,13 @@
 import env from "../lib/env";
+import { normalizeGitHubUsername, validateGitHubUsername } from "../utils/githubUsername";
+
+const emptySnapshot = {
+  profile: null,
+  repositories: [],
+  events: [],
+  languageBreakdown: [],
+  stats: null
+};
 
 function buildHeaders() {
   const headers = { Accept: "application/vnd.github+json" };
@@ -12,20 +21,38 @@ async function request(path) {
   const response = await fetch(`https://api.github.com${path}`, { headers: buildHeaders() });
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
+
+    if (response.status === 404) {
+      throw new Error("GitHub user not found. Check the username in your Profile settings.");
+    }
+
+    if (response.status === 403) {
+      throw new Error(
+        body.message || "GitHub API access denied. You may have hit the rate limit."
+      );
+    }
+
     throw new Error(body.message || "GitHub request failed");
   }
   return response.json();
 }
 
 export async function fetchGitHubSnapshot(username) {
-  if (!username) {
-    return { profile: null, repositories: [], events: [], languageBreakdown: [], stats: null };
+  const normalizedUsername = normalizeGitHubUsername(username);
+
+  if (!normalizedUsername) {
+    return emptySnapshot;
+  }
+
+  const validation = validateGitHubUsername(normalizedUsername);
+  if (!validation.valid) {
+    throw new Error(validation.error);
   }
 
   const [profile, repositories, events] = await Promise.all([
-    request(`/users/${username}`),
-    request(`/users/${username}/repos?per_page=100&sort=updated`),
-    request(`/users/${username}/events/public?per_page=100`)
+    request(`/users/${validation.username}`),
+    request(`/users/${validation.username}/repos?per_page=100&sort=updated`),
+    request(`/users/${validation.username}/events/public?per_page=100`)
   ]);
 
   const languages = repositories.reduce((accumulator, repository) => {
