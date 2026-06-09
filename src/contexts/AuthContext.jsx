@@ -7,8 +7,21 @@ import {
   subscribeToAuthChanges
 } from "../services/authService";
 import { fetchProfile, updateProfile as persistProfile } from "../services/profileService";
+import { saveRememberedAccount } from "../lib/accountStore";
 
 const AuthContext = createContext(null);
+
+function rememberAccount(user, profile) {
+  if (!user?.email) {
+    return;
+  }
+
+  saveRememberedAccount({
+    email: user.email,
+    full_name: profile?.full_name || user.user_metadata?.full_name || "",
+    avatar: user.user_metadata?.avatar_url || null
+  });
+}
 
 function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
@@ -57,18 +70,42 @@ function AuthProvider({ children }) {
 
   async function signIn(credentials) {
     const nextSession = await authSignIn(credentials);
+    if (!nextSession?.user) {
+      throw new Error("Unable to sign in. Please try again.");
+    }
+
     setSession(nextSession);
-    setUser(nextSession?.user ?? null);
+    setUser(nextSession.user);
     const nextProfile = await fetchProfile(nextSession.user);
     setProfile(nextProfile);
+    rememberAccount(nextSession.user, nextProfile);
+    return { profile: nextProfile };
   }
 
   async function signUp(credentials) {
-    const nextSession = await authSignUp(credentials);
-    setSession(nextSession);
-    setUser(nextSession?.user ?? null);
-    const nextProfile = await fetchProfile(nextSession.user);
+    const result = await authSignUp(credentials);
+
+    if (result.needsEmailConfirmation) {
+      return {
+        needsEmailConfirmation: true,
+        email: credentials.email.trim().toLowerCase()
+      };
+    }
+
+    if (!result.session?.user) {
+      throw new Error("Unable to complete sign up. Please try again.");
+    }
+
+    setSession(result.session);
+    setUser(result.session.user);
+    const nextProfile = await fetchProfile(result.session.user);
     setProfile(nextProfile);
+    rememberAccount(result.session.user, nextProfile);
+
+    return {
+      needsEmailConfirmation: false,
+      profile: nextProfile
+    };
   }
 
   async function signOut() {
@@ -81,6 +118,7 @@ function AuthProvider({ children }) {
   async function updateProfile(updates) {
     const nextProfile = await persistProfile(user.id, updates);
     setProfile(nextProfile);
+    rememberAccount(user, nextProfile);
     return nextProfile;
   }
 
