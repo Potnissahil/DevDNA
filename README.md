@@ -1,61 +1,259 @@
-# DevDNA
+# DevDNA - Developer Progress Tracking Platform
 
-DevDNA is a production-ready SaaS-style React application for developer growth intelligence. It combines authentication, profile management, GitHub analytics, learning goals, skills tracking, project tracking, architecture review, light/dark theming, and cloud-ready Supabase persistence in one polished workspace.
+DevDNA is a production-ready developer growth intelligence platform that helps students and developers track their learning journey in one place.
+
+The platform combines authentication, profile management, skills tracking, learning goals, project management, GitHub analytics, interactive charts, PDF reporting, and cloud-based data storage in a modern SaaS-style workspace.
+
+---
+
+## Live Demo
+
+🔗 https://devdna-neon.vercel.app
+
+---
 
 ## Features
 
-- Supabase-ready authentication with sign up, login, logout, protected routes, and session persistence
-- Supabase-ready CRUD for profiles, skills, learning goals, and projects
-- Graceful local preview mode when Supabase environment variables are not configured
-- GitHub analytics dashboard for repositories, language distribution, public activity, and profile metrics
-- Functional architecture review experience with system topology and recommendation cards
-- Responsive SaaS UI with reusable components, toast notifications, skeleton states, and dark mode persistence
-- Lazy-loaded routes and reusable service abstractions for maintainability
+### Authentication
+
+* Secure Signup and Login
+* Session Persistence
+* Protected Routes
+* Logout Functionality
+
+### Dashboard
+
+* Developer Progress Overview
+* Profile Summary
+* Learning Statistics
+* GitHub Visibility Metrics
+* Progress Snapshot
+
+### Skills Tracking
+
+* Add and Manage Skills
+* Track Progress Percentage
+* Monitor Skill Growth
+
+### Learning Goals
+
+* Create Learning Goals
+* Track Completion Status
+* Monitor Learning Roadmap
+
+### Project Management
+
+* Add Development Projects
+* Track Project Progress
+* Project Health Monitoring
+
+### GitHub Analytics
+
+* Repository Insights
+* Public Activity Tracking
+* Language Distribution
+* GitHub Profile Metrics
+
+### Analytics Dashboard
+
+* Skills Progress Charts
+* Learning Goal Analytics
+* Project Health Analytics
+* Overall Progress Summary
+* Visual Data Insights
+
+### PDF Reports
+
+* Export Professional PDF Reports
+* Skills Summary
+* Learning Goals Summary
+* Project Summary
+* GitHub Statistics
+* Analytics Overview
+* Report Generation Timestamp
+
+### User Experience
+
+* Responsive Design
+* Dark/Light Theme Support
+* Toast Notifications
+* Loading States
+* Reusable Components
+
+---
+
+## Screenshots
+
+### Dashboard
+
+(Add Dashboard Screenshot)
+
+### Analytics
+
+(Add Analytics Screenshot)
+
+### Skills Tracking
+
+(Add Skills Screenshot)
+
+### Projects Management
+
+(Add Projects Screenshot)
+
+### PDF Export
+
+(Add PDF Export Screenshot)
+
+---
 
 ## Tech Stack
 
-- React 18
-- Vite 5
-- Tailwind CSS 3
-- React Router DOM
-- Supabase JavaScript client
+### Frontend
 
-## Quick Start
+* React 18
+* Vite 5
+* Tailwind CSS
+* React Router DOM
+* Context API
 
-1. Install dependencies:
+### Backend & Database
+
+* Supabase
+* PostgreSQL
+
+### Analytics & Visualization
+
+* Recharts
+
+### PDF Generation
+
+* jsPDF
+* jsPDF-AutoTable
+
+### Deployment
+
+* Vercel
+
+---
+
+## Environment Variables
+
+Create a `.env` file and configure:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_GITHUB_TOKEN=optional_github_token
+```
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone YOUR_REPOSITORY_URL
+```
+
+Navigate to project folder:
+
+```bash
+cd DevDNA
+```
+
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. Copy `.env.example` to `.env` and add your credentials.
-
-3. Run the development server:
+Start development server:
 
 ```bash
 npm run dev
 ```
 
-4. Build for production:
+Build for production:
 
 ```bash
 npm run build
 ```
 
-## Environment Variables
+Preview production build:
 
-- `VITE_SUPABASE_URL`: Supabase project URL
-- `VITE_SUPABASE_ANON_KEY`: Supabase anon/public key
-- `VITE_GITHUB_TOKEN`: optional GitHub token for higher API rate limits
+```bash
+npm run preview
+```
 
-## Project Documentation
+---
 
-- [Architecture](docs/ARCHITECTURE.md)
-- [Setup Guide](docs/SETUP.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
-- [Database Schema](database/schema.sql)
+## Project Structure
 
-## Production Notes
+```text
+src/
+├── components/
+├── contexts/
+├── hooks/
+├── pages/
+├── services/
+├── utils/
+├── lib/
+├── data/
+└── assets/
+```
 
-- Without Supabase credentials, the app runs in local preview mode using browser storage so all UI flows remain functional during development.
-- For production, enable Supabase Auth email flows, apply the SQL schema, and configure your hosting environment variables.
+---
+
+## Key Highlights
+
+* Full Stack SaaS-Style Application
+* Cloud Database Integration
+* GitHub Analytics Integration
+* Interactive Charts & Analytics
+* PDF Export Functionality
+* Responsive User Interface
+* Production Deployment on Vercel
+* Real-world Portfolio Project
+
+---
+
+## Future Improvements
+
+* Activity Timeline
+* AI Learning Recommendations
+* Portfolio Sharing
+* Achievement Badges
+* Advanced GitHub Insights
+* Team Collaboration Features
+* Email Notifications
+
+---
+
+## Deployment
+
+Hosted on Vercel
+
+Live Application:
+
+https://devdna-neon.vercel.app
+
+---
+
+## Author
+
+### Sahil Potnis
+
+BBA(CA) Student | Full Stack Developer | React Enthusiast
+
+GitHub:
+https://github.com/Potnissahil
+
+Live Demo:
+https://devdna-neon.vercel.app
+
+---
+
+## License
+
+This project is created for educational, portfolio, and learning purposes.
