@@ -40,8 +40,8 @@ function SettingsPage() {
         github_username: githubValidation.username
       });
       pushToast({
-        title: "Profile updated",
-        description: "Your identity and GitHub settings were saved."
+        title: "Profile updated successfully.",
+        description: "Your changes have been saved."
       });
     } catch (error) {
       pushToast({
@@ -57,8 +57,8 @@ function SettingsPage() {
     <div className="space-y-6">
       <SectionHeader
         eyebrow="Profile"
-        title="User settings"
-        description="Manage your profile, GitHub integration target, and product identity settings."
+        title="Profile settings"
+        description="Update your personal details and GitHub username."
       />
 
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
@@ -71,14 +71,16 @@ function SettingsPage() {
                 className="field"
                 value={form.full_name}
                 onChange={(event) => updateField("full_name", event.target.value)}
+                placeholder="e.g. Aisha Sharma"
               />
             </label>
             <label className="block">
-              <span className="mb-2 block text-sm font-medium">Role</span>
+              <span className="mb-2 block text-sm font-medium">Your role</span>
               <input
                 className="field"
                 value={form.role}
                 onChange={(event) => updateField("role", event.target.value)}
+                placeholder="e.g. Frontend developer"
               />
             </label>
             <label className="block">
@@ -91,7 +93,7 @@ function SettingsPage() {
                 autoComplete="username"
               />
               <span className="mt-2 block text-xs leading-5 text-[var(--text-secondary)]">
-                Letters, numbers, and hyphens only. Leave blank to disconnect GitHub analytics.
+                Use letters, numbers, and hyphens only. Leave this blank to remove GitHub activity.
               </span>
             </label>
             <label className="block">
@@ -100,6 +102,7 @@ function SettingsPage() {
                 className="field min-h-28"
                 value={form.bio}
                 onChange={(event) => updateField("bio", event.target.value)}
+                placeholder="Write a short introduction about yourself and your interests."
               />
             </label>
             <Button type="submit" className="w-full" disabled={saving}>
@@ -109,20 +112,20 @@ function SettingsPage() {
         </Card>
 
         <Card className="p-6">
-          <h3 className="text-xl font-semibold">Environment status</h3>
+          <h3 className="text-xl font-semibold">App status</h3>
           <div className="mt-6 space-y-4">
-            <EnvironmentRow label="Authentication mode" value={authMode} />
+            <EnvironmentRow label="Sign-in method" value={authMode} />
             <EnvironmentRow
-              label="Session persistence"
-              value="Enabled via Supabase auth or local browser storage"
+              label="Session storage"
+              value="Saved using Supabase authentication or local browser storage"
             />
             <EnvironmentRow
-              label="Theme persistence"
-              value="Saved in localStorage and restored on refresh"
+              label="Theme preference"
+              value="Saved in local storage and restored on refresh"
             />
             <EnvironmentRow
-              label="GitHub analytics"
-              value="Public API enabled with optional token for higher rate limits"
+              label="GitHub connection"
+              value="Uses public GitHub data from the username saved in your profile"
             />
           </div>
         </Card>

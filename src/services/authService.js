@@ -128,3 +128,18 @@ export async function signOut() {
 
   window.localStorage.removeItem(DEMO_SESSION_KEY);
 }
+
+export async function requestPasswordReset(email) {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!supabase) {
+    throw new Error(
+      "Password reset email is unavailable in demo mode. Configure Supabase to test this feature."
+    );
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail);
+  if (error) {
+    throw formatAuthError(error);
+  }
+}

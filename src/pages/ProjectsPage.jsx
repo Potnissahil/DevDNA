@@ -24,7 +24,10 @@ function ProjectsPage() {
     try {
       await save(form);
       setForm(blankProject);
-      pushToast({ title: "Project saved", description: "Your project dashboard is up to date." });
+      pushToast({
+        title: "Project saved successfully.",
+        description: "Your changes have been saved."
+      });
     } catch (saveError) {
       pushToast({
         title: "Unable to save project",
@@ -37,15 +40,18 @@ function ProjectsPage() {
 
   async function handleDelete(id) {
     await destroy(id);
-    pushToast({ title: "Project removed", description: "The project has been deleted." });
+    pushToast({
+      title: "Project removed successfully.",
+      description: "The project has been deleted."
+    });
   }
 
   return (
     <div className="space-y-6">
       <SectionHeader
         eyebrow="Projects"
-        title="Delivery portfolio dashboard"
-        description="Track projects, health, stage, and context so your growth signals stay tied to real delivery work."
+        title="Projects"
+        description="Track your project stage, health, and summary in one place."
       />
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
@@ -59,6 +65,7 @@ function ProjectsPage() {
                 className="field"
                 value={form.name}
                 onChange={(event) => updateField("name", event.target.value)}
+                placeholder="e.g. DevDNA Portfolio Tracker"
               />
             </label>
             <label className="block">
@@ -75,7 +82,7 @@ function ProjectsPage() {
               </select>
             </label>
             <label className="block">
-              <span className="mb-2 block text-sm font-medium">Health</span>
+              <span className="mb-2 block text-sm font-medium">Project health</span>
               <select
                 className="field"
                 value={form.health}
@@ -92,6 +99,7 @@ function ProjectsPage() {
                 className="field min-h-28"
                 value={form.summary}
                 onChange={(event) => updateField("summary", event.target.value)}
+                placeholder="Briefly describe the project and its current status"
               />
             </label>
             <Button type="submit" className="w-full" disabled={submitting}>
@@ -138,8 +146,8 @@ function ProjectsPage() {
               ))
             ) : (
               <EmptyState
-                title="No projects yet"
-                description="Create a project record to connect your delivery work with the rest of the dashboard."
+                title="No projects added yet"
+                description="Create your first project."
               />
             )}
           </div>

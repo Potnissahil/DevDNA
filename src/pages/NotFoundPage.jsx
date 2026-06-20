@@ -10,13 +10,13 @@ function NotFoundPage() {
           Not Found
         </p>
         <h1 className="mt-3 text-3xl font-semibold text-[var(--text-primary)]">
-          This route doesn&apos;t exist.
+          This page is not available.
         </h1>
         <p className="mt-4 text-sm leading-6 text-[var(--text-secondary)]">
-          Head back to the overview dashboard and continue exploring the workspace.
+          The page you&apos;re looking for could not be found. Return to the dashboard to continue.
         </p>
         <Button as={Link} to="/" className="mt-6">
-          Back to overview
+          Back to dashboard
         </Button>
       </Card>
     </div>

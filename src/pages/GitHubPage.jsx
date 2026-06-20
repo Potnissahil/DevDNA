@@ -15,9 +15,9 @@ function GitHubPage() {
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="GitHub Integration"
-        title="Engineering activity dashboard"
-        description="Repository inventory, language usage, activity patterns, and public event signals from GitHub."
+        eyebrow="GitHub activity"
+        title="GitHub activity"
+        description="View repository details, languages, and recent public activity from GitHub."
         action={
           <Button variant="secondary" onClick={github.reload}>
             Refresh data
@@ -27,8 +27,8 @@ function GitHubPage() {
 
       {!profile?.github_username ? (
         <EmptyState
-          title="GitHub username required"
-          description="Set your GitHub username in Profile to start pulling repositories, activity, and language analytics."
+          title="No GitHub username connected"
+          description="Add your GitHub username in Profile to view repository activity."
         />
       ) : github.error ? (
         <EmptyState
@@ -58,7 +58,7 @@ function GitHubPage() {
               <SectionHeader
                 eyebrow="Profile"
                 title={github.profile?.name || github.profile?.login || "GitHub profile"}
-                description={github.profile?.bio || "Public GitHub account summary"}
+                description={github.profile?.bio || "Public GitHub profile summary"}
               />
               <dl className="mt-6 grid gap-4 sm:grid-cols-2">
                 <ProfileStat label="Followers" value={github.profile?.followers ?? 0} />
@@ -71,8 +71,8 @@ function GitHubPage() {
             <Card className="p-6">
               <SectionHeader
                 eyebrow="Languages"
-                title="Tech stack distribution"
-                description="A quick view of the dominant languages across public repositories."
+                title="Language distribution"
+                description="A quick view of the main languages used in public repositories."
               />
               <div className="mt-6 space-y-4">
                 {github.languageBreakdown.slice(0, 6).map((language) => {
@@ -102,7 +102,7 @@ function GitHubPage() {
             <SectionHeader
               eyebrow="Repositories"
               title="Most recently updated repositories"
-              description="Useful for spotting active work, ecosystem spread, and code ownership patterns."
+              description="Review recently updated repositories from the connected account."
             />
             <div className="mt-6 grid gap-4 lg:grid-cols-2">
               {github.repositories.slice(0, 8).map((repository) => (
@@ -119,7 +119,7 @@ function GitHubPage() {
                         {repository.name}
                       </p>
                       <p className="mt-1 text-sm leading-6 text-[var(--text-secondary)]">
-                        {repository.description || "No description provided."}
+                        {repository.description || "No description available."}
                       </p>
                     </div>
                     <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">

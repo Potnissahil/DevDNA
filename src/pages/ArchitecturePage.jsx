@@ -11,21 +11,21 @@ function ArchitecturePage() {
     <div className="space-y-6">
       <SectionHeader
         eyebrow="Architecture Review"
-        title="Production readiness review"
-        description="A structured look at the current DevDNA architecture across frontend, backend, data, security, and scale."
+        title="Application architecture"
+        description="A structured view of the current DevDNA architecture across the frontend, backend, data, and security layers."
       />
 
       <Card className="overflow-hidden p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h3 className="text-xl font-semibold">System topology</h3>
+            <h3 className="text-xl font-semibold">System overview</h3>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
               This diagram shows how the routed React client, state providers, service
               layer, Supabase backend, and GitHub integration fit together.
             </p>
           </div>
           <StatusPill tone={authMode === "supabase" ? "success" : "warning"}>
-            {authMode === "supabase" ? "Cloud-connected architecture" : "Preview mode with local persistence"}
+            {authMode === "supabase" ? "Supabase connected" : "Demo mode with local storage"}
           </StatusPill>
         </div>
 

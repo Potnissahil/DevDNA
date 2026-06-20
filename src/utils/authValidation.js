@@ -20,7 +20,7 @@ export function validatePassword(password, { forSignUp = false } = {}) {
     return "Use at least 8 characters with both letters and numbers.";
   }
   if (!forSignUp && password.length < 6) {
-    return "Password is required.";
+    return "Enter at least 6 characters.";
   }
   return "";
 }

@@ -9,9 +9,9 @@ function AccountPicker({ accounts, onContinue, onRemove, onUseAnother }) {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-semibold text-[var(--text-primary)]">Choose an account</h3>
+        <h3 className="text-lg font-semibold text-[var(--text-primary)]">Choose a saved account</h3>
         <p className="mt-1 text-sm text-[var(--text-secondary)]">
-          Continue with a saved account or sign in with another one.
+          Continue with a saved account or sign in with a different one.
         </p>
       </div>
 
@@ -36,7 +36,7 @@ function AccountPicker({ accounts, onContinue, onRemove, onUseAnother }) {
 
               <div className="min-w-0 flex-1">
                 <p className="truncate font-semibold text-[var(--text-primary)]">
-                  {account.full_name || "DevDNA user"}
+                  {account.full_name || "Saved user"}
                 </p>
                 <p className="truncate text-sm text-[var(--text-secondary)]">{account.email}</p>
               </div>
@@ -55,7 +55,7 @@ function AccountPicker({ accounts, onContinue, onRemove, onUseAnother }) {
       </div>
 
       <Button variant="secondary" className="w-full" onClick={onUseAnother}>
-        Use another account
+        Sign in with another account
       </Button>
     </div>
   );

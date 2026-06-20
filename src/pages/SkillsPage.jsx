@@ -25,7 +25,10 @@ function SkillsPage() {
     try {
       await save({ ...form, progress: Number(form.progress) });
       setForm(blankSkill);
-      pushToast({ title: "Skill saved", description: "Your skills dashboard was updated." });
+      pushToast({
+        title: "Skill saved successfully.",
+        description: "Your changes have been saved."
+      });
     } catch (saveError) {
       pushToast({
         title: "Unable to save skill",
@@ -38,15 +41,18 @@ function SkillsPage() {
 
   async function handleDelete(id) {
     await destroy(id);
-    pushToast({ title: "Skill removed", description: "The skill was deleted successfully." });
+    pushToast({
+      title: "Skill removed successfully.",
+      description: "The skill has been deleted."
+    });
   }
 
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="Skills Dashboard"
-        title="Capability tracking"
-        description="Track focus areas, maturity level, and progress so growth conversations stay concrete."
+        eyebrow="Skills"
+        title="Skills"
+        description="Track your skill levels, current focus areas, and progress."
       />
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
@@ -60,10 +66,11 @@ function SkillsPage() {
                 className="field"
                 value={form.name}
                 onChange={(event) => updateField("name", event.target.value)}
+                placeholder="e.g. React"
               />
             </label>
             <label className="block">
-              <span className="mb-2 block text-sm font-medium">Level</span>
+              <span className="mb-2 block text-sm font-medium">Skill level</span>
               <select
                 className="field"
                 value={form.level}
@@ -83,6 +90,7 @@ function SkillsPage() {
                 max="100"
                 value={form.progress}
                 onChange={(event) => updateField("progress", event.target.value)}
+                placeholder="e.g. 70"
               />
             </label>
             <label className="block">
@@ -91,6 +99,7 @@ function SkillsPage() {
                 className="field min-h-28"
                 value={form.focus}
                 onChange={(event) => updateField("focus", event.target.value)}
+                placeholder="e.g. Building small projects and practicing hooks"
               />
             </label>
             <Button type="submit" className="w-full" disabled={submitting}>
@@ -141,8 +150,8 @@ function SkillsPage() {
               ))
             ) : (
               <EmptyState
-                title="No skills tracked yet"
-                description="Start by adding the technical areas you want to measure and improve."
+                title="No skills added yet"
+                description="Add your first skill to start tracking progress."
               />
             )}
           </div>

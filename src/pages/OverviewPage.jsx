@@ -1,13 +1,22 @@
 import Card from "../components/common/Card";
 import MetricCard from "../components/common/MetricCard";
 import SectionHeader from "../components/common/SectionHeader";
+import SkillsProgressChart from "../components/charts/SkillsProgressChart";
+import StatusDonutChart from "../components/charts/StatusDonutChart";
 import EmptyState from "../components/feedback/EmptyState";
 import SkeletonCard from "../components/feedback/SkeletonCard";
 import useCollection from "../hooks/useCollection";
 import useGitHubData from "../hooks/useGitHubData";
 import { useAuth } from "../contexts/AuthContext";
+import { buildGoalStatusData, buildSkillsProgressData } from "../utils/analytics";
 import { calculateAverageProgress, formatDate, initialsFromName } from "../utils/formatters";
 import { normalizeGitHubUsername } from "../utils/githubUsername";
+
+const GOAL_COLORS = {
+  Completed: "#22c55e",
+  "In Progress": "var(--accent)",
+  Pending: "#f59e0b"
+};
 
 function OverviewPage() {
   const { profile } = useAuth();
@@ -20,62 +29,100 @@ function OverviewPage() {
   const activeGoals = goals.items.filter((goal) => goal.status !== "Completed").length;
   const progressAverage = calculateAverageProgress(skills.items);
   const hasGitHubUsername = Boolean(normalizeGitHubUsername(profile?.github_username));
+  const skillsProgressData = buildSkillsProgressData(skills.items).slice(0, 5);
+  const goalsStatusData = buildGoalStatusData(goals.items);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 xl:space-y-7">
       <SectionHeader
-        eyebrow="Command Center"
-        title="Overview dashboard"
-        description="Track product momentum, skill growth, learning execution, and repository health from one executive view."
+        eyebrow="Dashboard"
+        title="Project overview"
+        description="See your skills, learning goals, projects, and GitHub activity in one place."
       />
 
-      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <Card className="overflow-hidden p-6 sm:p-8">
-          <div className="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
-            <div className="max-w-2xl">
-              <span className="inline-flex rounded-full bg-[var(--accent-soft)] px-3 py-1 text-sm font-semibold text-[var(--accent)]">
-                Production-ready engineering growth workspace
+      <div className="grid gap-5 xl:grid-cols-[1.45fr_0.75fr]">
+        <Card className="overflow-hidden p-5 sm:p-6">
+          <div className="grid gap-5 xl:grid-cols-[0.92fr_1.08fr] xl:items-center">
+            <div className="max-w-xl">
+              <span className="inline-flex rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+                Dashboard focus
               </span>
-              <h2 className="mt-5 text-3xl font-semibold leading-tight sm:text-4xl">
-                Build a measurable developer growth system instead of another static dashboard.
+              <h2 className="mt-4 text-2xl font-semibold leading-tight sm:text-[2rem]">
+                Track progress, priorities, and portfolio signals at a glance.
               </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--text-secondary)]">
-                DevDNA connects learning goals, skill maturity, delivery projects,
-                and GitHub behavior so individuals and engineering leaders can make
-                sharper roadmap decisions.
+              <p className="mt-3 max-w-lg text-sm leading-6 text-[var(--text-secondary)]">
+                Review your current learning momentum, project coverage, and GitHub visibility from one compact workspace.
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              <MiniStat label="Profile" value={profile?.role || "Engineer"} />
-              <MiniStat
+            <div className="grid gap-3 sm:grid-cols-3 xl:self-stretch">
+              <HeroKpiCard
+                label="Profile"
+                value={profile?.role || "Engineer"}
+                meta={profile?.full_name || "Update your profile"}
+              />
+              <HeroKpiCard
                 label="GitHub"
                 value={profile?.github_username || "Not connected"}
+                meta={hasGitHubUsername ? "Connected for analytics" : "Add username in Profile"}
               />
-              <MiniStat label="Avg skill progress" value={`${progressAverage}%`} />
+              <HeroKpiCard
+                label="Average progress"
+                value={`${progressAverage}%`}
+                meta={`${skills.items.length} skills tracked`}
+                tone="accent"
+              />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[var(--accent-soft)] text-xl font-semibold text-[var(--accent)]">
+        <Card className="p-5 sm:p-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-base font-semibold text-[var(--accent)]">
               {initialsFromName(profile?.full_name || "Dev DNA")}
             </div>
-            <div>
-              <h3 className="text-xl font-semibold">{profile?.full_name || "Profile"}</h3>
-              <p className="text-sm text-[var(--text-secondary)]">{profile?.role}</p>
+            <div className="min-w-0">
+              <h3 className="truncate text-lg font-semibold">{profile?.full_name || "Profile"}</h3>
+              <p className="truncate text-sm text-[var(--text-secondary)]">{profile?.role}</p>
             </div>
           </div>
-          <dl className="mt-6 space-y-4">
-            <Row label="Bio" value={profile?.bio || "Add a short professional summary."} />
-            <Row
+          <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+            <CompactRow
               label="GitHub username"
-              value={profile?.github_username || "Set one in your profile page"}
+              value={profile?.github_username || "Set one in profile"}
+            />
+            <CompactRow
+              label="Profile status"
+              value={profile?.bio ? "Professional summary added" : "Add a short summary"}
+            />
+            <WideRow
+              label="Bio"
+              value={profile?.bio || "Add a short professional summary to strengthen your dashboard overview."}
             />
           </dl>
         </Card>
       </div>
+
+      <Card className="p-5 sm:p-6">
+        <SectionHeader
+          eyebrow="Progress snapshot"
+          title="Compact progress snapshot"
+          description="Quickly compare top skill growth and the current mix of learning goals."
+        />
+        <div className="mt-5 grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
+          <SkillsProgressChart data={skillsProgressData} loading={loading} compact />
+          <StatusDonutChart
+            title="Learning goal status"
+            description="A compact breakdown of completed, active, and pending learning goals."
+            data={goalsStatusData}
+            colors={GOAL_COLORS}
+            loading={loading}
+            emptyTitle="No goals to chart yet"
+            emptyDescription="Add learning goals to see how your roadmap is progressing."
+            compact
+          />
+        </div>
+      </Card>
 
       {loading ? (
         <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
@@ -88,22 +135,22 @@ function OverviewPage() {
           <MetricCard
             label="Skills tracked"
             value={skills.items.length}
-            trend={`${progressAverage}% avg`}
+            trend={`${progressAverage}% average`}
             tone="positive"
-            hint="Maturity progression across your active technical focus areas."
+            hint="Progress across the skills you are currently tracking."
           />
           <MetricCard
             label="Goals in motion"
             value={activeGoals}
             trend={`${goals.items.length} total`}
-            hint="Learning goals that still need active execution."
+            hint="Learning goals that are still in progress."
           />
           <MetricCard
             label="Projects tracked"
             value={projects.items.length}
             trend={`${projects.items.filter((project) => project.health === "Green").length} healthy`}
             tone="positive"
-            hint="Projects currently mapped in your product and delivery workspace."
+            hint="Projects currently added to your workspace."
           />
           <MetricCard
             label="GitHub repos"
@@ -126,28 +173,28 @@ function OverviewPage() {
             tone={github.error ? "warning" : "default"}
             hint={
               github.error ||
-              "Repository footprint and recent public activity from GitHub."
+              "Repository visibility and recent public activity from GitHub."
             }
           />
         </div>
       )}
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <Card className="p-6">
+      <div className="grid gap-5 xl:grid-cols-[1fr_1fr]">
+        <Card className="p-5 sm:p-6">
           <SectionHeader
-            eyebrow="Learning Momentum"
-            title="Active goal timeline"
-            description="Each goal is connected to a clear target date and delivery intent."
+            eyebrow="Learning goals"
+            title="Current goals"
+            description="Review your active learning goals and upcoming target dates."
           />
-          <div className="mt-6 space-y-4">
+          <div className="mt-5 space-y-3">
             {goals.items.length ? (
               goals.items.slice(0, 4).map((goal) => (
                 <div
                   key={goal.id}
                   className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)]/45 p-4"
                 >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
+                  <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                    <div className="min-w-0 flex-1">
                       <h3 className="font-semibold">{goal.title}</h3>
                       <p className="mt-1 text-sm leading-6 text-[var(--text-secondary)]">
                         {goal.notes}
@@ -162,19 +209,19 @@ function OverviewPage() {
             ) : (
               <EmptyState
                 title="No learning goals yet"
-                description="Add your first goal in the Learning dashboard to start tracking progress."
+                description="Add a learning goal to begin planning your progress."
               />
             )}
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-5 sm:p-6">
           <SectionHeader
-            eyebrow="GitHub Snapshot"
-            title="Language footprint"
-            description="A quick view of the technologies showing up across the connected GitHub account."
+            eyebrow="GitHub activity"
+            title="Language summary"
+            description="See the languages used in the connected GitHub account."
           />
-          <div className="mt-6 space-y-4">
+          <div className="mt-5 space-y-3">
             {github.loading ? (
               <SkeletonCard />
             ) : github.error ? (
@@ -184,8 +231,8 @@ function OverviewPage() {
               />
             ) : !hasGitHubUsername ? (
               <EmptyState
-                title="Connect a GitHub username"
-                description="Add your GitHub username in the Profile page to unlock repository analytics."
+                title="No GitHub username connected"
+                description="Add your GitHub username in Profile to view repository activity."
               />
             ) : github.languageBreakdown.length ? (
               github.languageBreakdown.slice(0, 5).map((language) => {
@@ -209,8 +256,8 @@ function OverviewPage() {
               })
             ) : (
               <EmptyState
-                title="No language data yet"
-                description="This GitHub account has no public repositories with a primary language to display."
+                title="No language data available"
+                description="This GitHub account does not have public repositories with language data to display."
               />
             )}
           </div>
@@ -220,19 +267,44 @@ function OverviewPage() {
   );
 }
 
-function MiniStat({ label, value }) {
+function HeroKpiCard({ label, value, meta, tone = "default" }) {
+  const toneClass =
+    tone === "accent"
+      ? "border-[color:var(--accent)]/20 bg-[var(--accent-soft)]/70"
+      : "border-[var(--border)] bg-[var(--panel-muted)]/55";
+
   return (
-    <div className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)] p-4">
-      <p className="text-sm text-[var(--text-secondary)]">{label}</p>
-      <p className="mt-2 text-lg font-semibold text-[var(--text-primary)]">{value}</p>
+    <div className={`flex h-full min-w-0 flex-col justify-between rounded-[26px] border p-4 ${toneClass}`}>
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-secondary)]">
+        {label}
+      </p>
+      <p className="mt-2 truncate text-lg font-semibold leading-tight text-[var(--text-primary)]" title={value}>
+        {value}
+      </p>
+      <p className="mt-2 truncate text-xs leading-5 text-[var(--text-secondary)]" title={meta}>
+        {meta}
+      </p>
     </div>
   );
 }
 
-function Row({ label, value }) {
+function CompactRow({ label, value }) {
   return (
-    <div className="border-b border-[var(--border)] pb-4 last:border-none last:pb-0">
-      <dt className="text-sm text-[var(--text-secondary)]">{label}</dt>
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel-muted)]/35 px-4 py-3">
+      <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-secondary)]">
+        {label}
+      </dt>
+      <dd className="mt-1 truncate text-sm font-medium leading-6 text-[var(--text-primary)]" title={value}>
+        {value}
+      </dd>
+    </div>
+  );
+}
+
+function WideRow({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel-muted)]/35 px-4 py-3 sm:col-span-2">
+      <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-secondary)]">{label}</dt>
       <dd className="mt-1 text-sm font-medium leading-6 text-[var(--text-primary)]">
         {value}
       </dd>

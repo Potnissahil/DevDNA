@@ -26,7 +26,10 @@ function LearningPage() {
     try {
       await save(form);
       setForm(blankGoal);
-      pushToast({ title: "Goal saved", description: "Your learning roadmap has been updated." });
+      pushToast({
+        title: "Learning goal saved successfully.",
+        description: "Your changes have been saved."
+      });
     } catch (saveError) {
       pushToast({
         title: "Unable to save goal",
@@ -39,22 +42,25 @@ function LearningPage() {
 
   async function handleDelete(id) {
     await destroy(id);
-    pushToast({ title: "Goal removed", description: "The item was deleted from your roadmap." });
+    pushToast({
+      title: "Learning goal removed successfully.",
+      description: "The goal has been deleted."
+    });
   }
 
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="Learning Progress"
-        title="Goal planning dashboard"
-        description="Define what to learn next, assign target dates, and track active vs completed execution."
+        eyebrow="Learning goals"
+        title="Learning goals"
+        description="Plan what to learn next, set target dates, and track your progress."
       />
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
         <Card className="p-6">
           <h3 className="text-xl font-semibold text-[var(--text-primary)]">Add or update goal</h3>
           <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-            Every goal should have a clear outcome, time boundary, and context for why it matters.
+            Add a learning goal with a target date and short notes.
           </p>
 
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
@@ -65,6 +71,7 @@ function LearningPage() {
                 className="field"
                 value={form.title}
                 onChange={(event) => updateField("title", event.target.value)}
+                placeholder="e.g. Learn React Router"
               />
             </label>
             <label className="block">
@@ -94,6 +101,7 @@ function LearningPage() {
                 className="field min-h-28"
                 value={form.notes}
                 onChange={(event) => updateField("notes", event.target.value)}
+                placeholder="Describe your progress or learning plan"
               />
             </label>
             <Button type="submit" className="w-full" disabled={submitting}>
@@ -103,9 +111,9 @@ function LearningPage() {
         </Card>
 
         <Card className="p-6">
-          <h3 className="text-xl font-semibold text-[var(--text-primary)]">Current roadmap</h3>
+          <h3 className="text-xl font-semibold text-[var(--text-primary)]">Current goals</h3>
           <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-            These items are stored in Supabase when configured, otherwise they persist locally in the browser.
+            Your learning goals are saved to Supabase when available, or stored locally in demo mode.
           </p>
           {error ? <p className="mt-4 text-sm text-[var(--tone-error-text)]">{error}</p> : null}
           <div className="mt-6 space-y-4">
@@ -143,8 +151,8 @@ function LearningPage() {
               ))
             ) : (
               <EmptyState
-                title="No roadmap items yet"
-                description="Create your first learning goal to start tracking execution."
+                title="No learning goals yet"
+                description="Add a goal to begin planning your growth."
               />
             )}
           </div>

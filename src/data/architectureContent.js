@@ -2,7 +2,7 @@ export const architectureSections = [
   {
     title: "Project Overview",
     description:
-      "DevDNA is structured as a single-page SaaS application with a protected workspace, cloud-ready data layer, and graceful local preview mode for development without credentials."
+      "DevDNA is structured as a single-page application with a protected workspace, a Supabase-backed data layer, and a local demo mode for development without credentials."
   },
   {
     title: "Frontend Architecture",
@@ -22,7 +22,7 @@ export const architectureSections = [
   {
     title: "API Layer",
     description:
-      "The client uses a compact service layer for auth, profile persistence, CRUD operations, and GitHub analytics. This keeps page components focused on product behavior rather than transport details."
+      "The client uses a compact service layer for authentication, profile persistence, CRUD operations, and GitHub analytics. This keeps page components focused on user interactions rather than transport details."
   },
   {
     title: "Authentication Flow",
@@ -37,11 +37,11 @@ export const architectureSections = [
   {
     title: "Performance Recommendations",
     description:
-      "Use lazy loading, keep presentational components reusable, cache remote fetches, and paginate large GitHub repository collections when scaling to enterprise-sized accounts."
+      "Use lazy loading, keep presentational components reusable, cache remote fetches, and paginate large GitHub repository collections when handling larger accounts."
   },
   {
     title: "Scalability Suggestions",
     description:
-      "Introduce feature modules, background jobs for repository sync, server-side analytics snapshots, audit logging, and multitenant workspace support as the product matures."
+      "Introduce feature modules, background jobs for repository sync, server-side analytics snapshots, and audit logging as the application grows."
   }
 ];

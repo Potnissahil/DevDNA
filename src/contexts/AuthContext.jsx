@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
   getInitialAuthState,
+  requestPasswordReset as authRequestPasswordReset,
   signIn as authSignIn,
   signOut as authSignOut,
   signUp as authSignUp,
@@ -115,6 +116,10 @@ function AuthProvider({ children }) {
     setProfile(null);
   }
 
+  async function requestPasswordReset(email) {
+    await authRequestPasswordReset(email);
+  }
+
   async function updateProfile(updates) {
     const nextProfile = await persistProfile(user.id, updates);
     setProfile(nextProfile);
@@ -133,6 +138,7 @@ function AuthProvider({ children }) {
       signIn,
       signUp,
       signOut,
+      requestPasswordReset,
       updateProfile
     }),
     [authMode, loading, profile, session, user]

@@ -35,10 +35,10 @@ const seed = {
   projects: [
     {
       id: "project-1",
-      name: "DevDNA SaaS",
+      name: "DevDNA Project Dashboard",
       stage: "Build",
       health: "Green",
-      summary: "Core application with auth, dashboards, architecture review, and Supabase."
+      summary: "Core application with authentication, dashboards, architecture review, and Supabase."
     }
   ]
 };
