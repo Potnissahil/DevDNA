@@ -242,7 +242,7 @@ function AuthPage() {
                     value={form.email}
                     onChange={(event) => updateField("email", event.target.value)}
                     className="field"
-                    placeholder="e.g. priya@example.com"
+                    placeholder="e.g. sahil@example.com"
                   />
                   {fieldErrors.email ? (
                     <p className="mt-2 text-sm text-[var(--tone-error-text)]">{fieldErrors.email}</p>
@@ -332,7 +332,7 @@ function AuthPage() {
                       value={form.fullName}
                       onChange={(event) => updateField("fullName", event.target.value)}
                       className="field"
-                      placeholder="e.g. Priya Mehta"
+                      placeholder="e.g. Sahil Potnis"
                     />
                     {fieldErrors.fullName ? (
                       <p className="mt-2 text-sm text-[var(--tone-error-text)]">
@@ -352,7 +352,7 @@ function AuthPage() {
                     value={form.email}
                     onChange={(event) => updateField("email", event.target.value)}
                     className="field"
-                    placeholder="e.g. priya@example.com"
+                    placeholder="e.g. sahil@example.com"
                     readOnly={mode === "login" && Boolean(form.email) && rememberedAccounts.some(
                       (account) => account.email === form.email.trim().toLowerCase()
                     )}
