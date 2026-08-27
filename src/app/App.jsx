@@ -7,6 +7,7 @@ import ErrorBoundary from "../components/feedback/ErrorBoundary";
 import { useAuth } from "../contexts/AuthContext";
 
 const AuthPage = lazy(() => import("../pages/AuthPage"));
+const ResetPasswordPage = lazy(() => import("../pages/ResetPasswordPage"));
 const OverviewPage = lazy(() => import("../pages/OverviewPage"));
 const AnalyticsPage = lazy(() => import("../pages/AnalyticsPage"));
 const GitHubPage = lazy(() => import("../pages/GitHubPage"));
@@ -32,6 +33,7 @@ function App() {
             path="/auth"
             element={isAuthenticated ? <Navigate to="/" replace /> : <AuthPage />}
           />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route
             path="/"
             element={

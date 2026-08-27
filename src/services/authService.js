@@ -48,8 +48,8 @@ export function subscribeToAuthChanges(callback) {
 
   const {
     data: { subscription }
-  } = supabase.auth.onAuthStateChange((_event, session) => {
-    callback(session);
+  } = supabase.auth.onAuthStateChange((event, session) => {
+    callback(session, event);
   });
 
   return () => subscription.unsubscribe();
@@ -138,7 +138,20 @@ export async function requestPasswordReset(email) {
     );
   }
 
-  const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail);
+  const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+    redirectTo: `${window.location.origin}/reset-password`
+  });
+  if (error) {
+    throw formatAuthError(error);
+  }
+}
+
+export async function updatePassword({ password }) {
+  if (!supabase) {
+    throw new Error("Password updates are unavailable in demo mode.");
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
   if (error) {
     throw formatAuthError(error);
   }

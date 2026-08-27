@@ -5,6 +5,7 @@ import {
   signIn as authSignIn,
   signOut as authSignOut,
   signUp as authSignUp,
+  updatePassword as authUpdatePassword,
   subscribeToAuthChanges
 } from "../services/authService";
 import { fetchProfile, updateProfile as persistProfile } from "../services/profileService";
@@ -30,6 +31,7 @@ function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [isRecovery, setIsRecovery] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -52,9 +54,14 @@ function AuthProvider({ children }) {
 
     bootstrap();
 
-    const unsubscribe = subscribeToAuthChanges(async (nextSession) => {
+    const unsubscribe = subscribeToAuthChanges(async (nextSession, event) => {
       setSession(nextSession);
       setUser(nextSession?.user ?? null);
+      if (event === "PASSWORD_RECOVERY") {
+        setIsRecovery(true);
+      } else if (!nextSession || event === "SIGNED_OUT") {
+        setIsRecovery(false);
+      }
       if (nextSession?.user) {
         const nextProfile = await fetchProfile(nextSession.user);
         setProfile(nextProfile);
@@ -120,6 +127,10 @@ function AuthProvider({ children }) {
     await authRequestPasswordReset(email);
   }
 
+  async function updatePassword(password) {
+    await authUpdatePassword({ password });
+  }
+
   async function updateProfile(updates) {
     const nextProfile = await persistProfile(user.id, updates);
     setProfile(nextProfile);
@@ -134,14 +145,16 @@ function AuthProvider({ children }) {
       session,
       user,
       profile,
+      isRecovery,
       isAuthenticated: Boolean(user),
       signIn,
       signUp,
       signOut,
       requestPasswordReset,
+      updatePassword,
       updateProfile
     }),
-    [authMode, loading, profile, session, user]
+    [authMode, loading, isRecovery, profile, session, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

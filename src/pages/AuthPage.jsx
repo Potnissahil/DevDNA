@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AccountPicker from "../components/auth/AccountPicker";
+import AuthBackdrop from "../components/auth/AuthBackdrop";
 import Button from "../components/common/Button";
 import Card from "../components/common/Card";
 import StatusPill from "../components/common/StatusPill";
@@ -193,7 +194,9 @@ function AuthPage() {
   const showResetForm = authView === "reset";
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen bg-[var(--surface)] px-4 py-8 sm:px-6 lg:px-8">
+      <AuthBackdrop />
+
       <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.2fr_0.8fr]">
         <section className="rounded-[36px] bg-[linear-gradient(135deg,var(--accent),var(--accent-2))] p-8 text-white shadow-[0_24px_60px_rgba(11,38,77,0.32)] sm:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.34em] text-white/80">
@@ -250,7 +253,17 @@ function AuthPage() {
                 </label>
 
                 <Button className="mt-2 w-full" size="lg" type="submit" disabled={submitting}>
-                  {submitting ? "Sending..." : "Send reset link"}
+                  {submitting ? (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                      />
+                      Sending...
+                    </>
+                  ) : (
+                    "Send reset link"
+                  )}
                 </Button>
               </form>
 
@@ -265,7 +278,15 @@ function AuthPage() {
             </>
           ) : (
             <>
-              <div className="flex gap-2 rounded-2xl bg-[var(--panel-muted)] p-1">
+              <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.34em] text-[var(--accent)]">
+                <span
+                  aria-hidden="true"
+                  className="h-px w-6 bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
+                ></span>
+                DevDNA
+              </p>
+
+              <div className="mt-4 flex gap-2 rounded-2xl bg-[var(--panel-muted)] p-1">
                 <button
                   type="button"
                   onClick={() => switchMode("login")}
@@ -307,16 +328,6 @@ function AuthPage() {
                     onClick={handleBackToPicker}
                   >
                     Back to saved accounts
-                  </Button>
-                ) : null}
-                {mode === "login" ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="mt-3"
-                    onClick={handleForgotPassword}
-                  >
-                    Forgot Password?
                   </Button>
                 ) : null}
               </div>
@@ -363,8 +374,17 @@ function AuthPage() {
                 </label>
 
                 <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-[var(--text-primary)]">
+                  <span className="mb-2 flex items-center justify-between gap-3 text-sm font-medium text-[var(--text-primary)]">
                     Password
+                    {mode === "login" ? (
+                      <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                        className="rounded text-xs font-semibold uppercase tracking-wide text-[var(--accent)] transition hover:text-[var(--accent-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                      >
+                        Forgot Password?
+                      </button>
+                    ) : null}
                   </span>
                   <input
                     required
@@ -409,11 +429,19 @@ function AuthPage() {
                 ) : null}
 
                 <Button className="mt-2 w-full" size="lg" type="submit" disabled={submitting}>
-                  {submitting
-                    ? "Working..."
-                    : mode === "login"
-                      ? "Log in"
-                      : "Sign up"}
+                  {submitting ? (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                      />
+                      Working...
+                    </>
+                  ) : mode === "login" ? (
+                    "Log in"
+                  ) : (
+                    "Sign up"
+                  )}
                 </Button>
               </form>
             </>

@@ -81,13 +81,13 @@ function GitHubPage() {
                     <div key={language.language}>
                       <div className="flex items-center justify-between text-sm">
                         <span className="font-medium">{language.language}</span>
-                        <span className="text-[var(--text-secondary)]">
+                        <span className="text-xs font-medium text-[var(--text-secondary)]">
                           {language.count} repos
                         </span>
                       </div>
-                      <div className="mt-2 h-3 rounded-full bg-[var(--panel-muted)]">
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--panel-muted)]">
                         <div
-                          className="h-3 rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
+                          className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))] shadow-[0_0_14px_-4px_var(--accent)]"
                           style={{ width: `${(language.count / max) * 100}%` }}
                         />
                       </div>
@@ -111,7 +111,7 @@ function GitHubPage() {
                   href={repository.html_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)]/45 p-4 transition hover:-translate-y-0.5 hover:border-[var(--accent)]/35"
+                  className="tile p-4 transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)]/40"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -143,9 +143,13 @@ function GitHubPage() {
 
 function ProfileStat({ label, value }) {
   return (
-    <div className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)]/45 p-4">
-      <dt className="text-sm text-[var(--text-secondary)]">{label}</dt>
-      <dd className="mt-2 text-xl font-semibold text-[var(--text-primary)]">{value}</dd>
+    <div className="tile p-4">
+      <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-secondary)]">
+        {label}
+      </dt>
+      <dd className="mt-1.5 text-xl font-semibold tracking-tight text-[var(--text-primary)]">
+        {value}
+      </dd>
     </div>
   );
 }

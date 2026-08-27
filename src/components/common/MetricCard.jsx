@@ -8,11 +8,13 @@ function MetricCard({ label, value, hint, trend, tone = "default" }) {
   };
 
   return (
-    <Card className="h-full p-5">
+    <Card className="h-full p-5 transition duration-200 hover:-translate-y-0.5">
       <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
-          <p className="text-sm text-[var(--text-secondary)]">{label}</p>
-          <p className="mt-2 break-words text-2xl font-semibold leading-tight text-[var(--text-primary)] sm:text-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-secondary)]">
+            {label}
+          </p>
+          <p className="mt-2 break-words bg-[linear-gradient(120deg,var(--text-primary),color-mix(in_srgb,var(--accent)_78%,var(--text-primary)))] bg-clip-text text-2xl font-semibold tracking-tight text-transparent sm:text-3xl">
             {value}
           </p>
         </div>
