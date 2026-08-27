@@ -7,7 +7,7 @@ import { useToasts } from "../contexts/ToastContext";
 import { validateGitHubUsername } from "../utils/githubUsername";
 
 function SettingsPage() {
-  const { profile, updateProfile, authMode } = useAuth();
+  const { profile, updateProfile, user, signOut, authMode } = useAuth();
   const [form, setForm] = useState({
     full_name: profile?.full_name || "",
     role: profile?.role || "",
@@ -112,21 +112,18 @@ function SettingsPage() {
         </Card>
 
         <Card className="p-6">
-          <h3 className="text-xl font-semibold">App status</h3>
+          <h3 className="text-xl font-semibold">Account</h3>
           <div className="mt-6 space-y-4">
-            <EnvironmentRow label="Sign-in method" value={authMode} />
-            <EnvironmentRow
-              label="Session storage"
-              value="Saved using Supabase authentication or local browser storage"
+            <InfoRow label="Signed-in email" value={user?.email || "—"} />
+            <InfoRow
+              label="Account type"
+              value={authMode === "supabase" ? "Supabase account" : "Demo account"}
             />
-            <EnvironmentRow
-              label="Theme preference"
-              value="Saved in local storage and restored on refresh"
-            />
-            <EnvironmentRow
-              label="GitHub connection"
-              value="Uses public GitHub data from the username saved in your profile"
-            />
+          </div>
+          <div className="mt-6 border-t border-[var(--border)] pt-6">
+            <Button variant="secondary" className="w-full" onClick={signOut}>
+              Log out
+            </Button>
           </div>
         </Card>
       </div>
@@ -134,7 +131,7 @@ function SettingsPage() {
   );
 }
 
-function EnvironmentRow({ label, value }) {
+function InfoRow({ label, value }) {
   return (
     <div className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)]/45 p-4">
       <p className="text-sm text-[var(--text-secondary)]">{label}</p>

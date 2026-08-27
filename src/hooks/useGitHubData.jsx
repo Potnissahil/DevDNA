@@ -7,7 +7,9 @@ const emptyData = {
   repositories: [],
   events: [],
   languageBreakdown: [],
-  stats: null
+  stats: null,
+  activity: null,
+  repositoryInsights: null
 };
 
 function useGitHubData(username) {

@@ -1,4 +1,6 @@
 import env from "../lib/env";
+import { computeGitHubActivity } from "../utils/githubActivity";
+import { computeRepositoryInsights } from "../utils/repositoryInsights";
 import { normalizeGitHubUsername, validateGitHubUsername } from "../utils/githubUsername";
 
 const emptySnapshot = {
@@ -6,7 +8,9 @@ const emptySnapshot = {
   repositories: [],
   events: [],
   languageBreakdown: [],
-  stats: null
+  stats: null,
+  activity: computeGitHubActivity([]),
+  repositoryInsights: computeRepositoryInsights([])
 };
 
 function buildHeaders() {
@@ -80,5 +84,13 @@ export async function fetchGitHubSnapshot(username) {
     .map(([language, count]) => ({ language, count }))
     .sort((a, b) => b.count - a.count);
 
-  return { profile, repositories, events, languageBreakdown, stats };
+  return {
+    profile,
+    repositories,
+    events,
+    languageBreakdown,
+    stats,
+    activity: computeGitHubActivity(events),
+    repositoryInsights: computeRepositoryInsights(repositories)
+  };
 }
