@@ -71,7 +71,7 @@ function SettingsPage() {
                 className="field"
                 value={form.full_name}
                 onChange={(event) => updateField("full_name", event.target.value)}
-                placeholder="e.g. Aisha Sharma"
+                placeholder="e.g. Sahil Potnis"
               />
             </label>
             <label className="block">
