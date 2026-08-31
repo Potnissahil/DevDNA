@@ -6,6 +6,7 @@ import SectionHeader from "../components/common/SectionHeader";
 import OverallProgressChart from "../components/charts/OverallProgressChart";
 import SkillsProgressChart from "../components/charts/SkillsProgressChart";
 import StatusDonutChart from "../components/charts/StatusDonutChart";
+import EmptyState from "../components/feedback/EmptyState";
 import { useToasts } from "../contexts/ToastContext";
 import useCollection from "../hooks/useCollection";
 import useGitHubData from "../hooks/useGitHubData";
@@ -14,7 +15,8 @@ import {
   buildGoalStatusData,
   buildOverallProgressData,
   buildProjectHealthData,
-  buildSkillsProgressData
+  buildSkillsProgressData,
+  generateRecommendations
 } from "../utils/analytics";
 import { generateDevDNAPdfReport } from "../utils/pdfReport";
 import { calculateAverageProgress } from "../utils/formatters";
@@ -62,6 +64,7 @@ function AnalyticsPage() {
     projects.items,
     github.stats
   );
+  const recommendations = generateRecommendations(skills.items, goals.items, github);
 
   async function handleExportPdf() {
     setExporting(true);
@@ -237,28 +240,28 @@ function AnalyticsPage() {
 
       <Card className="p-5 sm:p-6">
         <SectionHeader
-          eyebrow="Presentation notes"
-          title="What this dashboard communicates"
-          description="Use these signals to explain your current momentum during interviews, reviews, and demos."
+          eyebrow="Developer recommendations"
+          title="Recommended next steps"
+          description="Actionable suggestions based on your current data. These recommendations are generated using simple rules applied to your tracked skills, goals, and GitHub activity."
         />
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <Recommendation
-            title="Skills depth"
-            description="Shows where your strongest technical confidence sits right now."
-          />
-          <Recommendation
-            title="Learning discipline"
-            description="Highlights whether goals are being completed or accumulating in backlog."
-          />
-          <Recommendation
-            title="Delivery reliability"
-            description="Makes project health easy to understand for reviewers at a glance."
-          />
-          <Recommendation
-            title="Public coding rhythm"
-            description="Uses GitHub activity as a lightweight signal of recent engineering consistency."
-          />
-        </div>
+        {recommendations.length > 0 ? (
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {recommendations.map((rec) => (
+              <Recommendation
+                key={rec.id}
+                title={rec.title}
+                description={rec.description}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-6">
+            <EmptyState
+              title="No recommendations right now"
+              description="Your data looks good across all tracked areas. Keep up the momentum."
+            />
+          </div>
+        )}
       </Card>
     </div>
   );

@@ -88,6 +88,65 @@ export function buildOverallProgressData(skills = [], goals = [], projects = [],
   ];
 }
 
+export function generateRecommendations(skills = [], goals = [], github = null) {
+  const recommendations = [];
+
+  if (github?.repositoryInsights) {
+    const insights = github.repositoryInsights;
+    if (
+      insights.presentationRate !== null &&
+      insights.presentationRate < 100 &&
+      insights.repoCount - insights.presentedCount >= 1
+    ) {
+      const count = insights.repoCount - insights.presentedCount;
+      recommendations.push({
+        id: "repo-presentation",
+        title: "Improve repository presentation",
+        description: `${count} of your ${insights.repoCount} ${
+          insights.repoCount === 1 ? "repository is" : "repositories are"
+        } missing a description or homepage. Adding short descriptions makes your projects easier to find and understand.`,
+        priority: "attention"
+      });
+    }
+  }
+
+  if (skills.length > 0) {
+    const lowProgress = skills.filter(
+      (skill) => Number(skill.progress || 0) < 25
+    );
+    if (lowProgress.length >= 1) {
+      const names = lowProgress
+        .map((s) => `${s.name} (${Number(s.progress || 0)}%)`)
+        .join(", ");
+      recommendations.push({
+        id: "skills-low-progress",
+        title: "Review low-progress skills",
+        description: `${lowProgress.length} ${
+          lowProgress.length === 1 ? "skill is" : "skills are"
+        } below 25% progress: ${names}. Consider whether to invest more time or remove them from your tracking.`,
+        priority: "attention"
+      });
+    }
+  }
+
+  if (goals.length >= 3) {
+    const plannedCount = goals.filter((g) => g.status === "Planned").length;
+    const inProgressCount = goals.filter((g) => g.status === "In Progress").length;
+    if (plannedCount >= 3 && inProgressCount === 0) {
+      recommendations.push({
+        id: "goal-pipeline",
+        title: "Start working on your learning goals",
+        description: `${plannedCount} of ${goals.length} ${
+          goals.length === 1 ? "goal is" : "goals are"
+        } still planned with none currently in progress. Consider picking one goal to start working on.`,
+        priority: "attention"
+      });
+    }
+  }
+
+  return recommendations;
+}
+
 export function sumChartValues(items = []) {
   return items.reduce((sum, item) => sum + Number(item.value || 0), 0);
 }
