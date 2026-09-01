@@ -134,7 +134,9 @@ function SettingsPage() {
 function InfoRow({ label, value }) {
   return (
     <div className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)]/45 p-4">
-      <p className="text-sm text-[var(--text-secondary)]">{label}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-secondary)]">
+        {label}
+      </p>
       <p className="mt-2 text-sm font-semibold text-[var(--text-primary)]">{value}</p>
     </div>
   );

@@ -108,8 +108,8 @@ function AnalyticsPage() {
   return (
     <div className="space-y-6 xl:space-y-7">
       <SectionHeader
-        eyebrow="Analytics"
-        title="Analytics overview"
+        eyebrow="Insights"
+        title="Analytics"
         description="Track progress across skills, learning goals, projects, and GitHub activity."
         action={
           <Button

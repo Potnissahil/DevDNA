@@ -19,8 +19,8 @@ function GitHubPage() {
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="GitHub activity"
-        title="GitHub activity"
+        eyebrow="GitHub"
+        title="GitHub Activity"
         description="View repository details, languages, and recent public activity from GitHub."
         action={
           <Button variant="secondary" onClick={github.reload}>
@@ -379,7 +379,7 @@ function GitHubPage() {
 
 function ProfileStat({ label, value }) {
   return (
-    <div className="tile p-4">
+    <div className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)]/45 p-4">
       <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-secondary)]">
         {label}
       </dt>

@@ -49,7 +49,7 @@ function ProjectsPage() {
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="Projects"
+        eyebrow="Portfolio"
         title="Projects"
         description="Track your project stage, health, and summary in one place."
       />

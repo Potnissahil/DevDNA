@@ -51,8 +51,8 @@ function LearningPage() {
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="Learning goals"
-        title="Learning goals"
+        eyebrow="Learning"
+        title="Learning Goals"
         description="Plan what to learn next, set target dates, and track your progress."
       />
 

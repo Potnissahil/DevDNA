@@ -50,7 +50,7 @@ function SkillsPage() {
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="Skills"
+        eyebrow="Development"
         title="Skills"
         description="Track your skill levels, current focus areas, and progress."
       />

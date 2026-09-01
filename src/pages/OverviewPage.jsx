@@ -35,8 +35,8 @@ function OverviewPage() {
   return (
     <div className="space-y-6 xl:space-y-7">
       <SectionHeader
-        eyebrow="Dashboard"
-        title="Project overview"
+        eyebrow="Workspace"
+        title="Dashboard"
         description="See your skills, learning goals, projects, and GitHub activity in one place."
       />
 
@@ -274,7 +274,7 @@ function HeroKpiCard({ label, value, meta, tone = "default" }) {
       : "border-[var(--border)] bg-[var(--panel-muted)]/55";
 
   return (
-    <div className={`flex h-full min-w-0 flex-col justify-between rounded-[26px] border p-4 ${toneClass}`}>
+    <div className={`flex h-full min-w-0 flex-col justify-between rounded-3xl border p-4 ${toneClass}`}>
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-secondary)]">
         {label}
       </p>
@@ -290,7 +290,7 @@ function HeroKpiCard({ label, value, meta, tone = "default" }) {
 
 function CompactRow({ label, value }) {
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel-muted)]/35 px-4 py-3">
+    <div className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)]/35 px-4 py-3">
       <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-secondary)]">
         {label}
       </dt>
@@ -303,7 +303,7 @@ function CompactRow({ label, value }) {
 
 function WideRow({ label, value }) {
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel-muted)]/35 px-4 py-3 sm:col-span-2">
+    <div className="rounded-3xl border border-[var(--border)] bg-[var(--panel-muted)]/35 px-4 py-3 sm:col-span-2">
       <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-secondary)]">{label}</dt>
       <dd className="mt-1 text-sm font-medium leading-6 text-[var(--text-primary)]">
         {value}
